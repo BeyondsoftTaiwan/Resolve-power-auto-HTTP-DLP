@@ -1,19 +1,21 @@
 import azure.functions as func
 import json
- 
+
 app = func.FunctionApp()
+
+@app.route(
+route="GetRepositories",
+auth_level=func.AuthLevel.FUNCTION
+)
+def GetRepositories(req: func.HttpRequest) -> func.HttpResponse:
  
-@app.route(route="hello", auth_level=func.AuthLevel.FUNCTION)
-def hello(req: func.HttpRequest) -> func.HttpResponse:
- 
-response = {
+result = {
 "success": True,
-"message": "Azure Function is running",
-"source": "Power Automate DLP Workaround"
+"message": "PowerAutoDLP running"
 }
  
 return func.HttpResponse(
-json.dumps(response),
+json.dumps(result),
 mimetype="application/json",
 status_code=200
 )
