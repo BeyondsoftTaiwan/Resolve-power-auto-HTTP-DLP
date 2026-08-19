@@ -72,6 +72,6 @@ jobs:
           app-name: 'PowerAutoDLP'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2193E6A03AD94A9487742EDF63D90DDB }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CEFA02C2531F4BF89ECA8780E841B0F4 }}
           sku: 'flexconsumption'
         
