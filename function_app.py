@@ -1,8 +1,8 @@
 import azure.functions as func
 import json
-
+ 
 app = func.FunctionApp()
-
+ 
 @app.route(
 route="GetRepositories",
 auth_level=func.AuthLevel.FUNCTION
@@ -11,7 +11,7 @@ def GetRepositories(req: func.HttpRequest) -> func.HttpResponse:
  
 result = {
 "success": True,
-"message": "PowerAutoDLP running"
+"message": "PowerAutoDLP is running"
 }
  
 return func.HttpResponse(
