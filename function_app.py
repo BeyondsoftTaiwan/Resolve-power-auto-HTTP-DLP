@@ -1,6 +1,6 @@
 import azure.functions as func
 from azure.identity import ManagedIdentityCredential
-import jsonn
+import json
 
 app = func.FunctionApp()
 
