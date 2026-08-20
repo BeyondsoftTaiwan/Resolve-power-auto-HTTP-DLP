@@ -1,17 +1,35 @@
 import azure.functions as func
+from azure.identity import ManagedIdentityCredential
 import json
+ 
 app = func.FunctionApp()
+ 
 @app.route(
 route="GetRepositories",
 auth_level=func.AuthLevel.FUNCTION
 )
 def GetRepositories(req: func.HttpRequest) -> func.HttpResponse:
+try:
+credential = ManagedIdentityCredential()
+ 
+token = credential.get_token(
+"https://management.azure.com/.default"
+)
+ 
 result = {
-"success": True,
-"message": "PowerAutoDLP is running"
+"status": "success",
+"message": "PowerAutoDLP running",
+"token_length": len(token.token)
 }
+ 
 return func.HttpResponse(
 json.dumps(result),
 mimetype="application/json",
 status_code=200
+)
+ 
+except Exception as ex:
+return func.HttpResponse(
+str(ex),
+status_code=500
 )
