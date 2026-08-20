@@ -6,7 +6,7 @@ app = func.FunctionApp()
 
 @app.route(
     route="GetRepositories",
-    auth_level=func.AzureLevel.FUNCTION
+    auth_level=func.AuthLevel.FUNCTION
 )
 def GetRepositories(req: func.HttpRequest) -> func.HttpResponse:
   try:
