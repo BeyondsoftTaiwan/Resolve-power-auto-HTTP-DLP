@@ -51,6 +51,11 @@ def GetRepositories(req: func.HttpRequest) -> func.HttpResponse:
     )
     logger.info("GetRepositories error response built")
     return response
+
+@app.route(
+    route="GetPullRequests",
+    auth_level=func.AuthLevel.FUNCTION
+)
 def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
   logger.info("GetPullRequests received: method=%s", req.method)
 
