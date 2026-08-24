@@ -99,7 +99,7 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
             params = {
                 "searchCriteria.status": "all",
                 "$top": page_size,
-                "&skip": skip,
+                "$skip": skip,
                 "api-version": "7.1"
             }
             logger.info("Calling Azure DevOps Pull Request API")
@@ -154,20 +154,20 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
                 break
             skip += page_size
             
-            result = {
-                "status": "success",
-                "count": len(all_pull_requests),
-                "pullRequests": all_pull_requests
-            }
-            logger.info(
-                "GetPullRequests completed: count=%s",
-                len(all_pull_requests)
-                )
-            return func.HttpResponse(
-                json.dumps(result),
-                mimetype="application/json",
-                status_code=200
-            )
+        result = {
+            "status": "success",
+            "count": len(all_pull_requests),
+            "pullRequests": all_pull_requests
+        }
+        logger.info(
+            "GetPullRequests completed: count=%s",
+            len(all_pull_requests)
+        )
+        return func.HttpResponse(
+            json.dumps(result),
+            mimetype="application/json",
+            status_code=200
+        )
              
     except Exception as ex:
         logger.exception("GetPullRequests failed")
@@ -241,7 +241,7 @@ def GetFilesClientPrivateBND(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json",
             status_code=200
         )
-except Exception as ex:
+    except Exception as ex:
         logger.exception("GetFilesClientPrivateBND failed")
         return func.HttpResponse(
             str(ex),
