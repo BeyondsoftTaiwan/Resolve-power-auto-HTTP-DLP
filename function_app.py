@@ -3,6 +3,7 @@ from azure.identity import DefaultAzureCredential
 import json
 import logging
 import os
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +140,7 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
                     mimetype="application/json",
                     status_code=200
                 )
+             
     except Exception as ex:
         logger.exception("GetPullRequests failed")
         return func.HttpResponse(
