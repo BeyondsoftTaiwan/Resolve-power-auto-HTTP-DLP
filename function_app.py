@@ -106,40 +106,40 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
                 mimetype="application/json",
                 status_code=pr_response.status_code
             )
-            data = pr_response.json()
-            pull_requests = []
-            for pr in data.get("value", []):
-                pull_requests.append({
-                    "pullRequestId": pr.get("pullRequestId"),
-                    "title": pr.get("title"),
-                    "status": pr.get("status"),
-                    "creationDate": pr.get("creationDate"),
-                    "createdBy": (
-                        pr.get("createdBy", {})
-                        .get("displayName")
-                    ),
-                    "repositoryName": (
-                        pr.get("repository", {})
-                        .get("name")
-                    ),
-                    "sourceBranch": pr.get("sourceRefName"),
-                    "targetBranch": pr.get("targetRefName"),
-                    "url": pr.get("url")
-                })
-                result = {
-                    "status": "success",
-                    "count": len(pull_requests),
-                    "pullRequests": pull_requests
-                }
-                logger.info(
-                    "GetPullRequests completed: count=%s",
-                    len(pull_requests)
+        data = pr_response.json()
+        pull_requests = []
+        for pr in data.get("value", []):
+            pull_requests.append({
+                "pullRequestId": pr.get("pullRequestId"),
+                "title": pr.get("title"),
+                "status": pr.get("status"),
+                "creationDate": pr.get("creationDate"),
+                "createdBy": (
+                    pr.get("createdBy", {})
+                    .get("displayName")
+                ),
+                "repositoryName": (
+                    pr.get("repository", {})
+                    .get("name")
+                ),
+                "sourceBranch": pr.get("sourceRefName"),
+                "targetBranch": pr.get("targetRefName"),
+                "url": pr.get("url")
+            })
+            result = {
+                "status": "success",
+                "count": len(pull_requests),
+                "pullRequests": pull_requests
+            }
+            logger.info(
+                "GetPullRequests completed: count=%s",
+                len(pull_requests)
                 )
-                return func.HttpResponse(
-                    json.dumps(result),
-                    mimetype="application/json",
-                    status_code=200
-                )
+            return func.HttpResponse(
+                json.dumps(result),
+                mimetype="application/json",
+                status_code=200
+            )
              
     except Exception as ex:
         logger.exception("GetPullRequests failed")
