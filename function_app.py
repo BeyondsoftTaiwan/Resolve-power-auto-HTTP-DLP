@@ -320,7 +320,7 @@ def GetFilesClientPrivateAE(req: func.HttpRequest) -> func.HttpResponse:
         )
 
 @app.route(
-    route="GetFilesClientPrivateAE",
+    route="GetFilesClientPrivateWinHec",
     auth_level=func.AuthLevel.FUNCTION
 )
 def GetFilesClientPrivateWinHec(req: func.HttpRequest) -> func.HttpResponse:
