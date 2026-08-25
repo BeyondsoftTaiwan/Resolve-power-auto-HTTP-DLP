@@ -389,3 +389,145 @@ def GetFilesClientPrivateWinHec(req: func.HttpRequest) -> func.HttpResponse:
             str(ex),
             status_code=500
         )
+
+@app.route(
+    route="GetFilesIoTPrivate",
+    auth_level=func.AuthLevel.FUNCTION
+)
+def GetFilesIoTPrivate(req: func.HttpRequest) -> func.HttpResponse:
+    
+    try:
+        credential = GetFilesIoTPrivate(
+            managed_identity_client_id="f9de4e70-47fc-490a-8d58-4f65840d4e16"
+        )
+        token = credential.get_token(
+            "499b84ac-1321-427f-aa17-267ca6975798/.default"
+        )
+        headers = {
+            "Authorization": f"Bearer {token.token}",
+            "Content-Type": "application/json"
+        }
+        
+        url = (
+            "https://dev.azure.com/microsoft/"
+            "e5547036-015b-4291-9a77-28151a645368/"
+            "_apis/git/repositories/"
+            "00c2b511-7cf2-462b-8b31-1cc0ab0a7cf3/items"
+        )
+        params = {
+            "scopePath": "/ManualUploads/WindowsIoT/WindowsIoTPrivate",
+            "recursionLevel": "Full",
+            "includeContentMetadata": "true",
+            "api-version": "7.1"
+        }
+        response = requests.get(
+            url,
+            headers=headers,
+            params=params,
+            timeout=60
+        )
+        if response.status_code != 200:
+            return func.HttpResponse(
+                response.text,
+                status_code=response.status_code
+            )
+        data = response.json()
+        
+        files = []
+        
+        for item in data.get("value", []):
+            
+            if item.get("gitObjectType") == "blob":
+                
+                files.append({
+                    "fileName": item["path"].split("/")[-1],
+                    "path": item["path"],
+                    "objectId": item.get("objectId")
+                })
+        result = {
+            "count": len(files),
+            "files": files
+        }
+        
+        return func.HttpResponse(
+            json.dumps(result),
+            mimetype="application/json",
+            status_code=200
+        )
+    except Exception as ex:
+        logger.exception("GetFilesIoTPrivate failed")
+        return func.HttpResponse(
+            str(ex),
+            status_code=500
+        )
+
+@app.route(
+    route="GetFilesIoTPublic",
+    auth_level=func.AuthLevel.FUNCTION
+)
+def GetFilesIoTPublic(req: func.HttpRequest) -> func.HttpResponse:
+    
+    try:
+        credential = GetFilesIoTPublic(
+            managed_identity_client_id="f9de4e70-47fc-490a-8d58-4f65840d4e16"
+        )
+        token = credential.get_token(
+            "499b84ac-1321-427f-aa17-267ca6975798/.default"
+        )
+        headers = {
+            "Authorization": f"Bearer {token.token}",
+            "Content-Type": "application/json"
+        }
+        
+        url = (
+            "https://dev.azure.com/microsoft/"
+            "e5547036-015b-4291-9a77-28151a645368/"
+            "_apis/git/repositories/"
+            "00c2b511-7cf2-462b-8b31-1cc0ab0a7cf3/items"
+        )
+        params = {
+            "scopePath": "/ManualUploads/WindowsIoT/WindowsIoTPublic",
+            "recursionLevel": "Full",
+            "includeContentMetadata": "true",
+            "api-version": "7.1"
+        }
+        response = requests.get(
+            url,
+            headers=headers,
+            params=params,
+            timeout=60
+        )
+        if response.status_code != 200:
+            return func.HttpResponse(
+                response.text,
+                status_code=response.status_code
+            )
+        data = response.json()
+        
+        files = []
+        
+        for item in data.get("value", []):
+            
+            if item.get("gitObjectType") == "blob":
+                
+                files.append({
+                    "fileName": item["path"].split("/")[-1],
+                    "path": item["path"],
+                    "objectId": item.get("objectId")
+                })
+        result = {
+            "count": len(files),
+            "files": files
+        }
+        
+        return func.HttpResponse(
+            json.dumps(result),
+            mimetype="application/json",
+            status_code=200
+        )
+    except Exception as ex:
+        logger.exception("GetFilesIoTPublic failed")
+        return func.HttpResponse(
+            str(ex),
+            status_code=500
+        )
