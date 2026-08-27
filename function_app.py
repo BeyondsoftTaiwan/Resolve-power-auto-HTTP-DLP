@@ -326,7 +326,7 @@ def GetFilesClientPrivateAE(req: func.HttpRequest) -> func.HttpResponse:
 def GetFilesClientPrivateWinHec(req: func.HttpRequest) -> func.HttpResponse:
     
     try:
-        credential = GetFilesClientPrivateWinHec(
+        credential = DefaultAzureCredential(
             managed_identity_client_id="f9de4e70-47fc-490a-8d58-4f65840d4e16"
         )
         token = credential.get_token(
@@ -397,7 +397,7 @@ def GetFilesClientPrivateWinHec(req: func.HttpRequest) -> func.HttpResponse:
 def GetFilesIoTPrivate(req: func.HttpRequest) -> func.HttpResponse:
     
     try:
-        credential = GetFilesIoTPrivate(
+        credential = DefaultAzureCredential(
             managed_identity_client_id="f9de4e70-47fc-490a-8d58-4f65840d4e16"
         )
         token = credential.get_token(
@@ -468,7 +468,7 @@ def GetFilesIoTPrivate(req: func.HttpRequest) -> func.HttpResponse:
 def GetFilesIoTPublic(req: func.HttpRequest) -> func.HttpResponse:
     
     try:
-        credential = GetFilesIoTPublic(
+        credential = DefaultAzureCredential(
             managed_identity_client_id="f9de4e70-47fc-490a-8d58-4f65840d4e16"
         )
         token = credential.get_token(
