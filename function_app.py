@@ -2,9 +2,8 @@ import os
 import json
 import requests
 import azure.functions as func
- 
 from azure.identity import ClientSecretCredential
- 
+
 @app.route(
     route="TestAdoSP",
     auth_level=func.AuthLevel.FUNCTION
