@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import requests
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -91,18 +92,36 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
             "pullRequests"
         )
 
+        days = int(
+            req.params.get("days","180")
+        )
+
+        start_date = (
+            datetime.utcnow()
+            timedelta(days=days)
+        ).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        page_size = 100
+        max_pages = 10
+        max_records = 1000
+        
         all_pull_requests = []
         skip = 0
-        page_size = 100
+        page_count = 0
         
-        while True:
+        while page_count < max_pages:
             params = {
                 "searchCriteria.status": "all",
+                "searchCriteria.minTime": start_date,
                 "$top": page_size,
                 "$skip": skip,
                 "api-version": "7.1"
             }
-            logger.info("Calling Azure DevOps Pull Request API")
+            logger.info(
+                "Calling Azure DevOps API page=%s skip=%s",
+                page_count,
+                skip
+            )
             pr_response = requests.get(
                 url,
                 headers=headers,
@@ -114,6 +133,11 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
                 pr_response.status_code
             )
             if pr_response.status_code != 200:
+                logger.error(
+                    "ADO API failed: %s",
+                    pr_response.text[:500]
+                )
+                
                 return func.HttpResponse(
                     pr_response.text,
                     mimetype="application/json",
@@ -123,6 +147,9 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
             data = pr_response.json()
             current_page = data.get("value",[])
             if not current_page:
+                logger.info(
+                    "No more PRs found"
+                )
                 break
             for pr in current_page:
                 all_pull_requests.append({
@@ -153,10 +180,12 @@ def GetPullRequests(req: func.HttpRequest) -> func.HttpResponse:
             if len(current_page) < page_size:
                 break
             skip += page_size
+            page_count +=1
             
         result = {
             "status": "success",
             "count": len(all_pull_requests),
+            "lookbackDays": days,
             "pullRequests": all_pull_requests
         }
         logger.info(
